@@ -7,16 +7,15 @@ fun isPositive x =
 	     
 
 (* P31: Determine whether a given integer number is prime. *)
-
 fun isPrime x =
   let fun divisor y =
-	if ((isPositive x) mod y = 0)
+	if  ((isPositive x) mod y = 0)
 	then false
-	else if (y*y >= x) then true
-	else divisor (2*y-1)
-	    
+	else if  (y*y >= x) then true
+	else divisor (y+1)
   in
-      divisor 2
+      if x=2 then true
+      else divisor 2
   end
       
 (* P32: Determine the greatest common divisor of two positive integer numbers.*)
@@ -49,4 +48,30 @@ fun totient x =
 		    else totient_acc(y1-1,acc)
   in
      totient_acc(x,0)
+  end
+
+(* P35: Determine the prime factors of a given positive integer. *)
+(* TODO - optimization *)     
+fun pFactors x =
+  let fun primeDivisors (y,acc) =
+	if (isPrime y andalso ((isPositive x) mod y = 0))
+	then primeDivisors(y+1,y::acc)
+	else if (y*y >= x) then acc
+	else primeDivisors (y+1,acc)
+	    
+  in
+      primeDivisors (2,[])
+  end
+
+
+(* P36: Determine the prime factors of a given positive integer and their multiplicity. *)
+(* TODO count occurences and create tuples *)
+fun pFactorsMult x =
+  let fun primeDivisors (z,y,acc) =
+        if isPrime z then z::acc
+	else if (isPrime y andalso ((isPositive z) mod y = 0))
+	then primeDivisors(z div y,y,y::acc)
+	else primeDivisors (z,y+1,acc)
+  in
+      primeDivisors (x,2,[])
   end
